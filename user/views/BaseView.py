@@ -1,6 +1,6 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from blockchain import blockchain
+from blockchain.blockchain_db import blockchain
 
 class BaseViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
