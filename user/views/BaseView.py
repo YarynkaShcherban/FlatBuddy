@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from blockchain.blockchain_db import blockchain
 
+
 class BaseViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         instance = serializer.save()
@@ -17,7 +18,7 @@ class BaseViewSet(viewsets.ModelViewSet):
         blockchain.add_record({
             "action": f"{self.queryset.model.__name__.upper()}_UPDATED",
             "id": instance.pk,
-            "changes": serializer.validated_data
+            "changes": serializer.data  # <- замість validated_data, інакше не виведе в json
         })
         return instance
 

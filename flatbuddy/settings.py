@@ -78,11 +78,14 @@ WSGI_APPLICATION = 'flatbuddy.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'FlatBuddyDB',       
+        'NAME': 'FlatBuddyDB',
         'USER': 'postgres',
-        'PASSWORD': '516783',
+        'PASSWORD': '1372',
         'HOST': 'localhost',
         'PORT': '5432',
+        'OPTIONS': {
+            'options': '-c search_path=flat_buddy'
+        }
     }
 }
 

@@ -1,6 +1,9 @@
-import hashlib, json
+import hashlib
+import json
 from time import time
 from typing import List, Dict
+# Наразі не юзається, але НЕ ЧІПАТИ!!!
+
 
 class Block:
     def __init__(self, index, timestamp, data, previous_hash):
@@ -41,5 +44,6 @@ class Blockchain:
         )
         self.chain.append(block)
         return block
+
 
 blockchain = Blockchain()
