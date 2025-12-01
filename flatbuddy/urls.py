@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-
+from django.conf import settings
+from django.conf.urls.static import static
 from user.views import UserViewSet, UserProfileViewSet, UserHousingViewSet
 
 router = routers.DefaultRouter()

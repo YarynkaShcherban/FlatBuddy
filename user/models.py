@@ -16,7 +16,8 @@ CLEANLINESS_CHOICES = [
 ]
 
 ROOM_SHARING_CHOICES = [
-    ('Mені комфортно ділити кімнату з співмешканцем', 'Mені комфортно ділити кімнату з співмешканцем'),
+    ('Mені комфортно ділити кімнату з співмешканцем',
+     'Mені комфортно ділити кімнату з співмешканцем'),
     ('Я хочу мати окрему кімнату', 'Я хочу мати окрему кімнату'),
 ]
 
@@ -28,7 +29,8 @@ PREFERRED_GENDER_CHOICES = [
 
 HOUSING_STATUS_CHOICES = [
     ('Я шукаю квартиру та співмешканця', 'Я шукаю квартиру та співмешканця'),
-    ('Я шукаю лише співмешканця, маю свою/орендовану квартиру', 'Я шукаю лише співмешканця, маю свою/орендовану квартиру'),
+    ('Я шукаю лише співмешканця, маю свою/орендовану квартиру',
+     'Я шукаю лише співмешканця, маю свою/орендовану квартиру'),
 ]
 
 
@@ -38,20 +40,24 @@ class User(models.Model):
     last_name = models.CharField(max_length=50, verbose_name="Прізвище")
     country = models.CharField(max_length=50, verbose_name="Країна")
     city = models.CharField(max_length=50, verbose_name="Місто")
-    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, verbose_name="Стать")
+    gender = models.CharField(
+        max_length=10, choices=GENDER_CHOICES, verbose_name="Стать")
     birthdate = models.DateField(verbose_name="Дата народження")
-    phone_number = models.CharField(max_length=13, unique=True, verbose_name="Номер телефону")
-    email = models.EmailField(max_length=100, unique=True, verbose_name="Email")
+    phone_number = models.CharField(
+        max_length=13, unique=True, verbose_name="Номер телефону")
+    email = models.EmailField(
+        max_length=100, unique=True, verbose_name="Email")
 # ПАРОЛЬ, ПОВТОР ПАРОЛЮ, ХЕШУВАННЯ ПАРОЛЮ
     password_hash = models.CharField(max_length=255, verbose_name="Хеш пароля")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Створено")
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name="Створено")
 
     class Meta:
         managed = False
         db_table = 'flat_buddy"."user'
         verbose_name = 'Користувач'
         verbose_name_plural = 'Користувачі'
-        
+
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.email})"
 
@@ -64,21 +70,27 @@ class UserProfile(models.Model):
         related_name='profile',
         verbose_name="Користувач"
     )
-    
-    profile_photo_url = models.TextField(verbose_name="Фото профілю")
+
+    profile_photo = models.ImageField(
+        upload_to='user_photos/', verbose_name="Фото профілю")
     university = models.CharField(max_length=100, verbose_name="Заклад освіти")
-    specialization = models.CharField(max_length=50, verbose_name="Спеціалізація")
+    specialization = models.CharField(
+        max_length=50, verbose_name="Спеціалізація")
     study_year = models.CharField(max_length=50, verbose_name="Курс")
     languages = models.JSONField(verbose_name="Допустимі мови спілкування")
-    political_view = models.CharField(max_length=100, verbose_name="Політичні погляди")
-    cleanliness = models.IntegerField(choices=CLEANLINESS_CHOICES, verbose_name="Охайність (1-5)")
+    political_view = models.CharField(
+        max_length=100, verbose_name="Політичні погляди")
+    cleanliness = models.IntegerField(
+        choices=CLEANLINESS_CHOICES, verbose_name="Охайність (1-5)")
     lifestyle = models.TextField(verbose_name="Опишіть свій стиль життя")
     schedule = models.TextField(verbose_name="Розклад")
     sleep_schedule = models.TextField(verbose_name="Графік сну")
     bad_habits = models.TextField(verbose_name="Шкідливі звички")
     mbti = models.JSONField(verbose_name="MBTI")
-    extra_intro_version = models.CharField(max_length=50, verbose_name="Екстравертність/інтровертність")
-    hobbies = models.TextField(verbose_name="Розкажіть про ваші захоплення/хобі")
+    extra_intro_version = models.CharField(
+        max_length=50, verbose_name="Екстравертність/інтровертність")
+    hobbies = models.TextField(
+        verbose_name="Розкажіть про ваші захоплення/хобі")
     bio = models.TextField(verbose_name="Біо")
     looking_for = models.TextField(verbose_name="Кого шукаєте")
 
@@ -87,9 +99,31 @@ class UserProfile(models.Model):
         db_table = 'flat_buddy"."user_profile'
         verbose_name = 'Профіль користувача'
         verbose_name_plural = 'Профілі користувачів'
-        
+
     def __str__(self):
         return f"Профіль {self.user.email}"
+
+# нова моделька якої ще нема в бд. Потрібна для майбутнього функціоналу завантаження фото користувача (декілька фото)
+
+
+# class UserPhoto(models.Model):
+#     image_id = models.AutoField(primary_key=True)
+#     user = models.ForeignKey(
+#         User,
+#         on_delete=models.CASCADE,
+#         db_column='user_id'
+#     )
+
+#     image = models.ImageField(
+#         upload_to='user_photos/', verbose_name="Фото профілю")
+
+#     class Meta:
+#         managed = False
+#         db_table = 'flat_buddy"."user_photo'
+#         verbose_name = 'Фото профілю'
+
+#     def __str__(self):
+#         return f"Фото профілю {self.user.email}"
 
 
 class UserHousing(models.Model):
@@ -116,11 +150,16 @@ class UserHousing(models.Model):
         verbose_name="Що найкраще описує вашу ситуацію?"
     )
     budget = models.IntegerField(verbose_name="Який ваш бюджет?")
-    preferred_districts = models.JSONField(verbose_name="Оберіть бажаний район/райони проживання")
-    planned_duration = models.CharField(max_length=50, verbose_name="Як довго ви плануєте проживати у орендованій квартирі?")
-    move_in_date = models.CharField(max_length=100, verbose_name="Коли б ви хотіли заїхати у квартиру?")
-    has_pet = models.BooleanField(verbose_name="Чи є у вас домашній улюбленець?")
-    pet_description = models.TextField(blank=True, null=True, verbose_name="Розкажіть про своїх домашніх улюбленців")
+    preferred_districts = models.JSONField(
+        verbose_name="Оберіть бажаний район/райони проживання")
+    planned_duration = models.CharField(
+        max_length=50, verbose_name="Як довго ви плануєте проживати у орендованій квартирі?")
+    move_in_date = models.CharField(
+        max_length=100, verbose_name="Коли б ви хотіли заїхати у квартиру?")
+    has_pet = models.BooleanField(
+        verbose_name="Чи є у вас домашній улюбленець?")
+    pet_description = models.TextField(
+        blank=True, null=True, verbose_name="Розкажіть про своїх домашніх улюбленців")
 
     class Meta:
         managed = False
