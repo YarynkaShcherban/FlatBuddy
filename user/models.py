@@ -71,8 +71,6 @@ class UserProfile(models.Model):
         verbose_name="Користувач"
     )
 
-    profile_photo = models.ImageField(
-        upload_to='user_photos/', verbose_name="Фото профілю")
     university = models.CharField(max_length=100, verbose_name="Заклад освіти")
     specialization = models.CharField(
         max_length=50, verbose_name="Спеціалізація")
@@ -103,27 +101,26 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"Профіль {self.user.email}"
 
-# нова моделька якої ще нема в бд. Потрібна для майбутнього функціоналу завантаження фото користувача (декілька фото)
 
+class UserPhoto(models.Model):
+    image_id = models.AutoField(primary_key=True)
+    user_profile = models.ForeignKey(
+        UserProfile,
+        on_delete=models.CASCADE,
+        db_column='user_profile',
+        related_name='photos'
+    )
 
-# class UserPhoto(models.Model):
-#     image_id = models.AutoField(primary_key=True)
-#     user = models.ForeignKey(
-#         User,
-#         on_delete=models.CASCADE,
-#         db_column='user_id'
-#     )
+    image = models.ImageField(
+        upload_to='user_photos/', verbose_name="Фото профілю")
 
-#     image = models.ImageField(
-#         upload_to='user_photos/', verbose_name="Фото профілю")
+    class Meta:
+        managed = False
+        db_table = 'flat_buddy"."user_photo'
+        verbose_name = 'Фото профілю'
 
-#     class Meta:
-#         managed = False
-#         db_table = 'flat_buddy"."user_photo'
-#         verbose_name = 'Фото профілю'
-
-#     def __str__(self):
-#         return f"Фото профілю {self.user.email}"
+    def __str__(self):
+        return f"Фото профілю {self.user.email}"
 
 
 class UserHousing(models.Model):
