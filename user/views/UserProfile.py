@@ -11,13 +11,14 @@ class UserProfileViewSet(BaseViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
+    # перевизначила методи, щоб можна було обробляти список файлів
     def create(self, request, *args, **kwargs):
         photos = request.FILES.getlist('photos')
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        profile = serializer.save()
 
+        # створиться профіль + запис у блокчейн
         profile = self.perform_create(serializer)
 
         for photo in photos:
@@ -33,9 +34,8 @@ class UserProfileViewSet(BaseViewSet):
         serializer = self.get_serializer(
             instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
-        profile = serializer.save()
 
-        profile = self.perform_create(serializer)
+        profile = self.perform_update(serializer)
 
         for photo in photos:
             UserPhoto.objects.create(user_profile=profile, image=photo)
