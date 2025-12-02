@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import JSONField
+import bcrypt
 
 GENDER_CHOICES = [
     ('Чоловік', 'Чоловік'),
@@ -57,6 +58,30 @@ class User(models.Model):
         db_table = 'flat_buddy"."user'
         verbose_name = 'Користувач'
         verbose_name_plural = 'Користувачі'
+
+    @staticmethod
+    def hash_password(password: str) -> str:
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(password.encode("utf-8"), salt)
+        return hashed.decode("utf-8")
+
+    @staticmethod
+    def verify_password(password: str, password_hash: str) -> bool:
+        return bcrypt.checkpw(password.encode("utf-8"), password_hash.encode("utf-8"))
+
+    def check_password(self, password: str) -> bool:
+        return self.verify_password(password, self.password_hash)
+
+    @classmethod
+    def create_user_with_password(cls, user_data: dict, password: str, repeat_password: str):
+        if password != repeat_password:
+            raise ValueError("Паролі не співпадають")
+        password_hash = cls.hash_password(password)
+        user = cls(
+            **user_data,
+            password_hash=password_hash
+        )
+        return user
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.email})"

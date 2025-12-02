@@ -3,9 +3,24 @@ from .models import User, UserProfile, UserHousing, UserPhoto
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True)
+    repeat_password = serializers.CharField(write_only=True, required=True)
+
     class Meta:
         model = User
-        fields = '__all__'
+        fields = [
+            "first_name", "last_name", "country", "city",
+            "gender", "birthdate", "phone_number", "email",
+            "password", "repeat_password",
+        ]
+
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        repeat_password = validated_data.pop("repeat_password")
+        user = User.create_user_with_password(
+            validated_data, password, repeat_password)
+        user.save()
+        return user
 
 
 class UserPhotoSerializer(serializers.ModelSerializer):

@@ -38,6 +38,6 @@ class UserProfileViewSet(BaseViewSet):
         profile = self.perform_update(serializer)
 
         for photo in photos:
-            UserPhoto.objects.create(user_profile=profile, image=photo)
+            UserPhoto.objects.update(user_profile=profile, image=photo)
 
         return Response(UserProfileSerializer(profile).data)
