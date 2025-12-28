@@ -2,12 +2,6 @@ from django.db import models
 from django.db.models import JSONField
 import bcrypt
 
-GENDER_CHOICES = [
-    ('Чоловік', 'Чоловік'),
-    ('Жінка', 'Жінка'),
-    ('Інше', 'Інше'),
-]
-
 CLEANLINESS_CHOICES = [
     (1, '1 (Дуже неохайно)'),
     (2, '2'),
@@ -37,17 +31,14 @@ HOUSING_STATUS_CHOICES = [
 
 class User(models.Model):
     user_id = models.AutoField(primary_key=True)
-    first_name = models.CharField(max_length=50, verbose_name="Ім'я")
-    last_name = models.CharField(max_length=50, verbose_name="Прізвище")
-    country = models.CharField(max_length=50, verbose_name="Країна")
-    city = models.CharField(max_length=50, verbose_name="Місто")
-    gender = models.CharField(
-        max_length=10, choices=GENDER_CHOICES, verbose_name="Стать")
-    birthdate = models.DateField(verbose_name="Дата народження")
-    phone_number = models.CharField(
-        max_length=13, unique=True, verbose_name="Номер телефону")
-    email = models.EmailField(
-        max_length=100, unique=True, verbose_name="Email")
+    first_name = models.CharField(verbose_name="Ім'я")
+    last_name = models.CharField(verbose_name="Прізвище")
+    country = models.CharField(verbose_name="Країна")
+    city = models.CharField(verbose_name="Місто")
+    gender = models.CharField(verbose_name="Стать")
+    birthdate = models.CharField(verbose_name="Дата народження")
+    phone_number = models.CharField(unique=True, verbose_name="Номер телефону")
+    email = models.EmailField(unique=True, verbose_name="Email")
 # ПАРОЛЬ, ПОВТОР ПАРОЛЮ, ХЕШУВАННЯ ПАРОЛЮ
     password_hash = models.CharField(max_length=255, verbose_name="Хеш пароля")
     created_at = models.DateTimeField(

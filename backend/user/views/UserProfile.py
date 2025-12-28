@@ -1,7 +1,4 @@
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from blockchain.blockchain_db import blockchain
 from ..models import UserProfile, UserPhoto
 from ..serializers import UserProfileSerializer
 from .BaseView import BaseViewSet

@@ -2,6 +2,7 @@
   "name": "flatbuddy-react",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://127.0.0.1:8000",
   "dependencies": {
     "@twilio-paste/core": "10.11.0",
     "@twilio-paste/icons": "5.4.0",
