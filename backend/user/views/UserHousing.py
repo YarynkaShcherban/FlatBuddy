@@ -1,5 +1,5 @@
-from ..models import UserHousing
-from ..serializers import UserHousingSerializer
+from user.models import UserHousing
+from user.serializers import UserHousingSerializer
 from .BaseView import BaseViewSet
 
 

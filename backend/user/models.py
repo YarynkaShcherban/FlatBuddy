@@ -2,13 +2,6 @@ from django.db import models
 from django.db.models import JSONField
 import bcrypt
 
-CLEANLINESS_CHOICES = [
-    (1, '1 (Дуже неохайно)'),
-    (2, '2'),
-    (3, '3 (Середньо)'),
-    (4, '4'),
-    (5, '5 (Дуже охайно)'),
-]
 
 ROOM_SHARING_CHOICES = [
     ('Mені комфортно ділити кімнату з співмешканцем',
@@ -92,10 +85,9 @@ class UserProfile(models.Model):
         max_length=50, verbose_name="Спеціалізація")
     study_year = models.CharField(max_length=50, verbose_name="Курс")
     languages = models.JSONField(verbose_name="Допустимі мови спілкування")
-    political_view = models.CharField(
-        max_length=100, verbose_name="Політичні погляди")
-    cleanliness = models.IntegerField(
-        choices=CLEANLINESS_CHOICES, verbose_name="Охайність (1-5)")
+    political_view = models.JSONField(
+        verbose_name="Політичні погляди")
+    cleanliness = models.IntegerField(verbose_name="Охайність (1-5)")
     lifestyle = models.TextField(verbose_name="Опишіть свій стиль життя")
     schedule = models.TextField(verbose_name="Розклад")
     sleep_schedule = models.TextField(verbose_name="Графік сну")

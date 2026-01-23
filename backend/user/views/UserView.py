@@ -1,6 +1,6 @@
-from ..models import User
-from ..serializers import UserSerializer
-from .BaseView import BaseViewSet
+from user.models import User
+from user.serializers import UserSerializer
+from user.views.BaseView import BaseViewSet
 
 
 class UserViewSet(BaseViewSet):

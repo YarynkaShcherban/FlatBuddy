@@ -1,7 +1,27 @@
 from datetime import date, datetime
-from rest_framework import serializers
-from .models import User, UserProfile, UserHousing, UserPhoto
 import re
+from rest_framework import serializers
+from user.constants.choices import CITY_CHOICES, COUNTRY_CHOICES, VALID_GENDERS
+from user.models import User
+
+UKRAINIAN_PATTERN = r"^[А-ЩЬЮЯҐЄІЇ][а-щьюяґєії'\-]*$"
+
+VALID_UA_PHONE_CODES = [
+    # Київстар
+    '067', '068', '096', '097', '098',
+    # Vodafone
+    '050', '066', '095', '099',
+    # lifecell
+    '063', '073', '093',
+    # Інтертелеком
+    '089', '094',
+    # ТриМоб
+    '091',
+    # People.net
+    '092',
+    # Фінтелеком
+    '039'
+]
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -53,25 +73,28 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
     def validate_country(self, value):
-        if value not in COUNTRY_CHOICES.values():
+        key = int(value)
+        if key not in COUNTRY_CHOICES.keys():
             raise serializers.ValidationError(
                 "Має бути обрано дійсний варіант зі списку")
 
-        return value
+        return COUNTRY_CHOICES[key]
 
     def validate_city(self, value):
-        if value not in CITY_CHOICES.values():
+        key = int(value)
+        if key not in CITY_CHOICES.keys():
             raise serializers.ValidationError(
                 "Має бути обрано дійсний варіант зі списку")
 
-        return value
+        return CITY_CHOICES[key]
 
     def validate_gender(self, value):
-        if value not in VALID_GENDERS.values():
+        key = int(value)
+        if key not in VALID_GENDERS.keys():
             raise serializers.ValidationError(
                 "Має бути обрано дійсний варіант зі списку")
 
-        return value
+        return VALID_GENDERS[key]
 
     def validate_birthdate(self, value):
         # З фронта надсилається такий формат дати: 2006-10-19T21:00:00.000Z
@@ -101,8 +124,15 @@ class UserSerializer(serializers.ModelSerializer):
         if phone_code not in VALID_UA_PHONE_CODES:
             raise serializers.ValidationError(
                 "Невірний код мобільного оператора України")
-        # Запис в БД у нормалізованому вигляді: +380XXXXXXXXX
-        return f"+{value}"
+
+        # нормалізований вигляд: +380XXXXXXXXX
+        value = f"+{value}"
+        # окрема перевірка на унікальність, бо в модельці unique для цього поля не працює
+        if User.objects.filter(phone_number=value).exists():
+            raise serializers.ValidationError(
+                "Цей номер телефону вже зареєстрований")
+
+        return value
 
     def validate_email(self, value):
         if len(value) >= 50:
@@ -118,89 +148,3 @@ class UserSerializer(serializers.ModelSerializer):
             validated_data, password, repeat_password)
         user.save()
         return user
-
-
-class UserPhotoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserPhoto
-        fields = ['image']
-
-
-class UserProfileSerializer(serializers.ModelSerializer):
-
-    photos = UserPhotoSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = UserProfile
-        fields = '__all__'
-
-
-class UserHousingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserHousing
-        fields = '__all__'
-
-
-UKRAINIAN_PATTERN = r"^[А-ЩЬЮЯҐЄІЇ][а-щьюяґєії'\-]*$"
-
-VALID_UA_PHONE_CODES = [
-    # Київстар
-    '067', '068', '096', '097', '098',
-    # Vodafone
-    '050', '066', '095', '099',
-    # lifecell
-    '063', '073', '093',
-    # Інтертелеком
-    '089', '094',
-    # ТриМоб
-    '091',
-    # People.net
-    '092',
-    # Фінтелеком
-    '039'
-]
-
-COUNTRY_CHOICES = {
-    "ua": "Україна"
-}
-
-CITY_CHOICES = {
-    "kyiv": "Київ",
-    "lviv": "Львів",
-    "odessa": "Одеса",
-    "kharkiv": "Харків",
-    "dnipro": "Дніпро",
-    "zaporizhzhia": "Запоріжжя",
-    "vinnytsia": "Вінниця",
-    "cherkasy": "Черкаси",
-    "ivano_frankivsk": "Івано-Франківськ",
-    "ternopil": "Тернопіль",
-    "rivne": "Рівне",
-    "zhytomyr": "Житомир",
-    "sumy": "Суми",
-    "poltava": "Полтава",
-    "chernihiv": "Чернігів",
-    "kropyvnytskyi": "Кропивницький",
-    "lutsk": "Луцьк",
-    "khmelnytskyi": "Хмельницький",
-    "mykolaiv": "Миколаїв",
-    "chernivtsi": "Чернівці",
-    "uzhhorod": "Ужгород",
-    "berehove": "Берегове",
-    "kamianets_podilskyi": "Кам'янець-Подільський",
-    "kamianske": "Кам'янське",
-    "bila_tserkva": "Біла Церква",
-    "brovary": "Бровари",
-    "kherson": "Херсон",
-    "mukachevo": "Мукачево",
-    "kremenchuk": "Кременчук",
-    "konotop": "Конотоп",
-    "uman": "Умань",
-    "krivyi_rih": "Кривий Ріг"
-}
-
-VALID_GENDERS = {
-    "male": "Чоловік",
-    "female": "Жінка",
-    "other": "Інше"
-}
