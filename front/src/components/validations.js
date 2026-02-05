@@ -159,12 +159,89 @@ export const validations = {
 
   cleanliness: (value) => {
     if (!value) return "Оберіть рівень охайності";
-    if (/^[1-5]?$/.test(value)) {
-      setValue(value);
-    }
     return null;
   },
 
+  bad_habits: (value) => {
+    if (!value) return "Опишіть ваші шкідливі звички";
+    if (value.length < 2) return "Як мінімум 2 символи";
+    if (value.length > 100) return "Максимум 100 символів";
+    return null;
+  },
 
+  mbti: (value) => {
+    if (!value) return "Оберіть ваш MBTI тип";
+    if (value === 0) return "Вкажіть ваш MBTI тип";
+    return null;
+  },
 
+  hobby: (value) => {
+    if (!value) return "Вкажіть захоплення/хобі";
+    if (value.length < 2) return "Як мінімум 2 символи";
+    if (value.length > 200) return "Максимум 200 символів";
+    return null;
+  },
+
+  biography: (value) => {
+    if (!value) return "Вкажіть біографію";
+    if (value.length < 2) return "Як мінімум 2 символи";
+    if (value.length > 300) return "Максимум 300 символів";
+    return null;
+  },
+
+  looking_for: (value) => {
+    if (!value) return "Вкажіть, кого шукаєте";
+    if (value.length < 2) return "Як мінімум 2 символи";
+    if (value.length > 200) return "Максимум 200 символів";
+    return null;
+  },
+
+  room_sharing_preference: (value) => {
+    if (value === undefined || value === null || value === 0) return "Оберіть свою преференцію";
+    return null;
+  },
+
+  preferred_gender: (value) => {
+    if (value === undefined || value === null || value === 0) return "Оберіть із ким ви б хотіли проживати";
+    return null;
+  },
+
+  housing_status: (value) => {
+    if (value === undefined || value === null || value === 0) return "Оберіть ваш статус";
+    return null;
+  },
+
+  budget: (value) => {
+    if (!value) return "Вкажіть ваш бюджет";
+    if (value < 1000) return "Мінімальний бюджет 1000 грн";
+    return null;
+  },
+
+  // Тут будуть валідації для districts
+
+  planned_duration: (value) => {
+    if (!value) return "Вкажіть відповідь";
+    if (value.length < 2) return "Як мінімум 2 символи";
+    if (value.length > 50) return "Максимум 50 символів";
+    return null;
+  },
+
+  move_in_date: (value) => {
+    if (!value) return "Вкажіть відповідь";
+    if (value.length < 2) return "Як мінімум 2 символи";
+    if (value.length > 50) return "Максимум 50 символів";
+    return null;
+  },
+
+  pet: (value) => {
+    if (value === undefined || value === null || value === 0) return "Оберіть відповідь";
+    return null;
+  },
+
+  pets_description: (value) => {
+    if (!value) return "Опишіть ваших улюбленців";
+    if (value.length < 2) return "Як мінімум 2 символи";
+    if (value.length > 100) return "Максимум 100 символів";
+    return null;
+  }
 };

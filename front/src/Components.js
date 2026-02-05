@@ -275,4 +275,3 @@ const labelStyle = {
   fontFamily: "Seenonim",
   color: "#000",
 };
-

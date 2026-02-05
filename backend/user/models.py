@@ -30,7 +30,7 @@ class User(models.Model):
     city = models.CharField(verbose_name="Місто")
     gender = models.CharField(verbose_name="Стать")
     birthdate = models.CharField(verbose_name="Дата народження")
-    phone_number = models.CharField(unique=True, verbose_name="Номер телефону")
+    phone_number = models.CharField(verbose_name="Номер телефону", unique=True)
     email = models.EmailField(unique=True, verbose_name="Email")
 # ПАРОЛЬ, ПОВТОР ПАРОЛЮ, ХЕШУВАННЯ ПАРОЛЮ
     password_hash = models.CharField(max_length=255, verbose_name="Хеш пароля")

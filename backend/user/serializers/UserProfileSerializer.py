@@ -119,8 +119,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         profile = super().create(validated_data)
 
-        for photo in uploaded_photos:
-            UserPhoto.objects.create(user_profile=profile, image=photo)
+        # !bulk_create кращий для швидшого створення об'єктів (1 запит на вставку замість n-ї к-сті)
+        photos = [
+            UserPhoto(user_profile=profile, image=photo)
+            for photo in uploaded_photos
+        ]
+        UserPhoto.objects.bulk_create(photos)
+
+        # for photo in uploaded_photos:
+        #     UserPhoto.objects.create(user_profile=profile, image=photo)
         return profile
 
     def update(self, instance, validated_data):
@@ -128,8 +135,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
         profile = super().update(instance, validated_data)
 
         if uploaded_photos is not None:
-            for photo in uploaded_photos:
-                UserPhoto.objects.create(user_profile=profile, image=photo)
+            photos = [
+                UserPhoto(user_profile=profile, image=photo)
+                for photo in uploaded_photos
+            ]
+        UserPhoto.objects.bulk_create(photos)
+        # if uploaded_photos is not None:
+        #     for photo in uploaded_photos:
+        #         UserPhoto.objects.create(user_profile=profile, image=photo)
         return profile
 
     def validate_cleanliness(self, value):

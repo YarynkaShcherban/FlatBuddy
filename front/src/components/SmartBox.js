@@ -42,9 +42,21 @@ const detectValidationType = (children) => {
   if (placeholder.includes("стиль")) { return "style_of_life"; }
   if (placeholder.includes("сну")) { return "sleep_schedule"; }
   if (placeholder.includes("шкідливі")) { return "bad_habits"; }
+  if (placeholder.includes("MBTI")) { return "mbti"; }
   if (placeholder.includes("хоббі")) { return "hobby"; }
   if (placeholder.includes("Біографія")) { return "biography"; }
   if (placeholder.includes("buddy")) { return "looking_for"; }
+
+
+  if (placeholder.includes("room_sharing_preference")) { return "room_sharing_preference"; }
+  if (placeholder.includes("preferred_gender")) { return "preferred_gender"; }
+  if (placeholder.includes("housing_status")) { return "housing_status"; }
+  if (placeholder.includes("грн")) { return "budget"; }
+  if (placeholder.includes("districts")) { return "districts"; }
+  if (placeholder.includes("Ваш термін проживання")) { return "planned_duration"; }
+  if (placeholder.includes("Ваша дата початку проживання")) { return "move_in_date"; }
+  if (placeholder.includes("pet")) { return "pet"; }
+  if (placeholder.includes("Ваші улюбленці")) { return "pets_description"; }
 
   return null;
 };

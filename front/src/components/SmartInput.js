@@ -11,7 +11,11 @@ export function SmartInput({
   onFocus,
   onBlur,
   disabled,
+  inputGuard,
   margintop="12px",
+  inputMode = "text",
+  pattern = null,
+  prefix = null,
   ...rest
 }) {
 
@@ -22,10 +26,20 @@ export function SmartInput({
   }, [defaultValue]);
 
   const handleChange = (event) => {
-    const newValue = event?.target?.value ?? event;
-    setValue(newValue);
-    if (typeof onChange === "function") onChange(newValue);
-  };
+  const rawValue = event?.target?.value ?? event;
+
+  if (typeof inputGuard === "function") {
+    const guardedValue = inputGuard(rawValue);
+    if (guardedValue === undefined) return;
+    setValue(guardedValue);
+    onChange?.(guardedValue);
+    return;
+  }
+
+  setValue(rawValue);
+  onChange?.(rawValue);
+};
+
 
   const handleFocus = (event) => {
     if (typeof onFocus === "function") onFocus(event);
@@ -36,6 +50,7 @@ export function SmartInput({
   };
 
   const baseStyle = {
+    boxSizing: "border-box",
     width: "100%",
     height: "100%",
     marginTop: margintop,
@@ -52,18 +67,30 @@ export function SmartInput({
 
   if (!mask) {
     return (
-      <input
-        {...rest}
-        style={{
+      <div style={{ display: "flex", alignItems: "center" }}>
+        {prefix && <span style={{
           ...baseStyle,
-          "--placeholder-color-input": disabled ? "#99999980" : "#AAAAAA"
-        }}
-        value={value}
-        disabled={disabled}
-        onChange={(e) => handleChange(e)}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-      />
+          width: "30px",
+          // marginTop: parseInt(margintop, 10) + 2 + "px",
+          marginRight: "0px",
+          paddingRight: "0px",
+          color: "#999999",
+        }}>{prefix}</span>}
+        <input
+          {...rest}
+          style={{
+            ...baseStyle,
+            "--placeholder-color-input": disabled ? "#99999980" : "#AAAAAA"
+          }}
+          value={value}
+          disabled={disabled}
+          onChange={(e) => handleChange(e)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          inputMode={inputMode}
+          pattern={pattern}
+        />
+      </div>
     );
   }
 
