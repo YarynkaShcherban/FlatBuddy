@@ -1,6 +1,7 @@
-import { max } from 'moment';
-import React, { PureComponent } from 'react';
+import React, { useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
+
+const CYRILLIC_REGEX = /^[\u0400-\u04FF\s-]*$/;
 
 export function SmartCreatable({
     options = [],
@@ -10,15 +11,30 @@ export function SmartCreatable({
     onBlur,
     onMenuOpen,
     onMenuClose
-}) {
+})
+
+{
     const [selectedOption, setSelectedOption] = React.useState(defaultValue || options[0] || null);
+    
+    const [inputValue, setInputValue] = useState("");
 
     return (
         <CreatableSelect
             value={selectedOption}
+            inputValue={inputValue}
             onChange={(val) => {
                 setSelectedOption(val);
+                setInputValue("");
                 onChange?.(val);
+            }}
+            onInputChange={(inputValue, { action }) => {
+                if (action !== "input-change") {
+                    return;
+                }
+
+                if (CYRILLIC_REGEX.test(inputValue)) {
+                    setInputValue(inputValue);
+                }
             }}
             onFocus={onFocus}
             onBlur={onBlur}
@@ -44,6 +60,8 @@ export function SmartCreatable({
                 }),
                 menuPortal: (base) => ({
                     ...base,
+                    width: '30%',
+                    minWidth: '300px',
                     zIndex: 9999,
                 }),
                 menu: (base) => ({
@@ -52,10 +70,12 @@ export function SmartCreatable({
                     border: '1px solid #ccc',
                     minHeight: '100px',
                     maxHeight: '200px',
+                    // width: '120%'
                 }),
                 menuList: (base) => ({
                     ...base,
                     maxHeight: '200px',
+                    // width: '120%'
                 }),
                 option: (base, state) => ({
                     ...base,
@@ -67,6 +87,7 @@ export function SmartCreatable({
                     },
                     fontSize: '16px',
                     fontFamily: 'Inter',
+                    // width: '120%'
                 }),
             }}
         />

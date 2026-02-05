@@ -1,132 +1,189 @@
 body {
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    position: absolute;
-    width: 100%;
-    min-height: 100vw;
-  }
-  
-  @font-face {
-    font-family: 'Inter';
-    src: url('./fonts/Inter.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-  }
-  
-  @font-face {
-    font-family: 'Seenonim';
-    src: url('./fonts/Seenonim.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-  }
-  
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  position: absolute;
+  width: 100%;
+  min-height: 100vw;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('./fonts/Inter.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Seenonim';
+  src: url('./fonts/Seenonim.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.main-grid {
+  display: grid;
+  gap: 40px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.submain-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 768px) {
   .main-grid {
-    display: grid;
-    gap: 24px;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto;
   }
-  
-  @media (max-width: 768px) {
-    .main-grid {
-      grid-template-columns: 1fr !important;
-      grid-template-rows: auto auto;
-    }
+}
+
+@media (max-width: 768px) {
+  .submain-grid {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto auto;
+    align-self: flex-start;
+    margin-left: 40px;
   }
-  
-  .smartbox {
-    filter: blur(5px);
-  }
-  
-  .master {
-    position: absolute;
-    overflow: hidden;
-    width: 100%;
-    min-height: 100%;
-  }
-  
-  input {
-    width: 15vw;
-    border: none;
-    background: transparent;
-    outline: none;
-    font-size: 16px;
-    font-family: 'Inter';
-    color: rgba(0, 0, 0, 1);
-    line-height: 125%;
-  }
-  
-  input:focus {
-    outline: none;
-  }
-  
-  /* select {
-    z-index: 1000;
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: transparent;
-    outline: none;
-    font-size: 16px;
-    font-family: 'Inter';
-    padding: 0 10px;
-    color: rgba(0, 0, 0, 1);
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  } */
-  
-  .outerDiv {
-    position: relative;
-    display: flex;
-    width: 100%;
-    pointer-events: auto;
-  }
-  
-  .innerDiv {
-    position: relative;
-    box-sizing: border-box;
-    pointer-events: auto;
-  }
-  
-  .centerer {
-    position: absolute;
-    height: 100%;
-    top: 0;
-    left: 0;
-  }
-  
-  .maxer {
-    align-items: flex-end;
-    position: absolute;
-    bottom: 0;
-  }
-  
-  .vector svg {
-    width: 100%;
-    height: 100%;
-    position: fixed;
-  }
-  
-  a {
-    cursor: pointer;
-  }
-  
-  .smart-box-base {
-      border: none !important;
-      background-color: rgba(204, 221, 187, 1) !important;
-      width: 60% !important;
-      margin-left: 0 !important;
-      height: 45% !important;
-      position: relative !important;
-      top: 31% !important;
-      display: block !important; /* це важливо */
-      visibility: visible !important;
-  }
-  
-  .smart-box-active {
-      border: 2px solid rgba(204, 221, 187, 1) !important;
-      background-color: transparent !important;
-  }
+}
+
+
+.smartbox {
+  filter: blur(5px);
+}
+
+.master {
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+  min-height: 100%;
+}
+
+input {
+  width: 15vw;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 16px;
+  font-family: 'Inter';
+  color: rgba(0, 0, 0, 1);
+  line-height: 125%;
+}
+
+input:focus {
+  outline: none;
+}
+
+.outerDiv {
+  position: relative;
+  display: flex;
+  width: 100%;
+  pointer-events: auto;
+}
+
+.innerDiv {
+  position: relative;
+  box-sizing: border-box;
+  pointer-events: auto;
+}
+
+.centerer {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.maxer {
+  align-items: flex-end;
+  position: absolute;
+  bottom: 0;
+}
+
+.vector svg {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+}
+
+a {
+  cursor: pointer;
+}
+
+.smart-box-base {
+    border: none !important;
+    background-color: rgba(204, 221, 187, 1) !important;
+    width: 60% !important;
+    margin-left: 0 !important;
+    height: 45% !important;
+    position: relative !important;
+    top: 31% !important;
+    display: block !important; /* це важливо */
+    visibility: visible !important;
+}
+
+.smart-box-active {
+    border: 2px solid rgba(204, 221, 187, 1) !important;
+    background-color: transparent !important;
+}
+
+input::placeholder {
+  color: var(--placeholder-color-input);
+}
+
+textarea::placeholder {
+  opacity: 1;
+  color: var(--placeholder-color-text);
+}
+
+.react-hint {
+  background-color: #F6DDD4; /* фон під стиль проекту */
+  color: #000;                /* текст */
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  opacity: 0.95;
+  transition: all 0.3s ease;
+  pointer-events: none; /* хінт “літає” і не заважає hover */
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background-color: #F6DDD4;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+
+/* Chrome, Edge, Safari */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border: 3px solid #F6DDD4;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Firefox */
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border: 3px solid #F6DDD4;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Firefox track */
+.slider::-moz-range-track {
+  background-color: #F6DDD4;
+  height: 6px;
+  border-radius: 3px;
+}
