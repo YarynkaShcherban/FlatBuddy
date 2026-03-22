@@ -1,16 +1,10 @@
-import React, { PureComponent } from 'react';
-import { SmartSelect } from '../components/SmartSelect';
-import { SmartInput } from '../components/SmartInput';
-import { SmartText } from '../components/SmartText';
-import { SmartBox } from '../components/SmartBox';
-import { SmartCreatable } from '../components/SmartCreatable';
-import { Header } from '../components/Header';
-import { SubmitBtn } from '../components/SubmitBtn';
-import { UploadPhoto } from '../components/UploadPhoto';
-import { UniversityOptions } from '../components/UniversityOptions';
-import { MultiSelect } from '../components/MultiSelect';
-import { languageOptions } from '../components/languageOptions';
-import { MBTI } from '../components/MBTI';
+﻿import React, { PureComponent } from 'react';
+import { SmartSelect } from '../components/SmartSelect.jsx';
+import { SmartInput } from '../components/SmartInput.jsx';
+import { SmartText } from '../components/SmartText.jsx';
+import { SmartBox } from '../components/SmartBox.jsx';
+import { Header } from '../components/Header.jsx';
+import { SubmitBtn } from '../components/SubmitBtn.jsx';
 
 function buildRegistrationPayload(formState) {
 	const result = {};
@@ -41,16 +35,36 @@ export class Step3 extends PureComponent {
 		}));
 	};
 
-	handleSubmit = () => {
+	handleSubmit = async () => {
 		const payload = buildRegistrationPayload(this.state.formState);
 	
-		// console.log("REGISTRATION JSON:", payload);
-	
-		localStorage.setItem(
-			"registrationDraft_3",
-			JSON.stringify(payload, null, 2)
-		);
-	};
+		// localStorage.setItem(
+		// 	"registrationDraft_2",
+		// 	JSON.stringify(payload, null, 2)
+		// );
+		
+		await fetch("/api/register", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(payload),
+		})
+		.then((res) => res.json())
+		.then((data) => {
+			console.log("Registration response:", data);
+			if (data.success) {
+				alert("Реєстрація успішна");
+				window.location.href = "/login";
+			} else {
+				alert("Помилка реєстрації: " + data.message);
+			}
+		})
+		.catch((error) => {
+			console.error("Registration error:", error);
+			alert("Сталася помилка при реєстрації. Спробуйте ще раз.");
+		});
+  	};
 
 	handleLinkClick = (url) => {
 		window.open(url, '_blank');
@@ -92,7 +106,12 @@ export class Step3 extends PureComponent {
     	return (
       		<div>
         		<div className='header-grid'>
-          			<Header />
+          			<Header
+						onFBClick={this.props.onGoHome}
+						onHomeClick={this.props.onGoHome}
+						onLoginClick={this.props.onLoginClick}
+						onFindRoommateClick={this.props.onFindRoommate}
+					/>
         		</div>
         
 				<div style={{ padding: "40px 20px 40px 20px" }}>
@@ -124,7 +143,7 @@ export class Step3 extends PureComponent {
 									<SmartSelect
 										options={[
 											{ value: 0, label: 'Чому ви надаєте перевагу?' },
-											{ value: 1, label: 'Mені комфортно ділити кімнату з співмешканцем'},
+											{ value: 1, label: 'Мені комфортно ділити кімнату з співмешканцем'},
 											{ value: 2, label: 'Я хочу мати окрему кімнату'},
 										]}
 										mywidth='630px'
@@ -305,7 +324,8 @@ export class Step3 extends PureComponent {
 							/> */}
 
 							<SubmitBtn
-								onClick={this.handleSubmit}
+								onClick={() => alert("Форма готова до відправки!")}
+								// onClick={this.handleSubmit}
 								disabled={!isFormValid(formState)}
 								btntext="Надіслати"
 							/>
@@ -323,3 +343,6 @@ const labelStyle = {
   fontFamily: "Seenonim",
   color: "#000",
 };
+
+
+

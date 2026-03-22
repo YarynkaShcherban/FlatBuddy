@@ -1,16 +1,16 @@
-import React, { PureComponent } from 'react';
-import { SmartSelect } from '../components/SmartSelect';
-import { SmartInput } from '../components/SmartInput';
-import { SmartText } from '../components/SmartText';
-import { SmartBox } from '../components/SmartBox';
-import { SmartCreatable } from '../components/SmartCreatable';
-import { Header } from '../components/Header';
-import { SubmitBtn } from '../components/SubmitBtn';
-import { UploadPhoto } from '../components/UploadPhoto';
-import { UniversityOptions } from '../components/UniversityOptions';
-import { MultiSelect } from '../components/MultiSelect';
-import { languageOptions } from '../components/languageOptions';
-import { MBTI } from '../components/MBTI';
+﻿import React, { PureComponent } from 'react';
+import { SmartSelect } from '../components/SmartSelect.jsx';
+import { SmartInput } from '../components/SmartInput.jsx';
+import { SmartText } from '../components/SmartText.jsx';
+import { SmartBox } from '../components/SmartBox.jsx';
+import { SmartCreatable } from '../components/SmartCreatable.jsx';
+import { Header } from '../components/Header.jsx';
+import { SubmitBtn } from '../components/SubmitBtn.jsx';
+import { UploadPhoto } from '../components/UploadPhoto.jsx';
+import { UniversityOptions } from '../components/UniversityOptions.jsx';
+import { MultiSelect } from '../components/MultiSelect.jsx';
+import { languageOptions } from '../components/languageOptions.jsx';
+import { MBTI } from '../components/MBTI.jsx';
 
 function buildRegistrationPayload(formState) {
 	const result = {};
@@ -41,16 +41,33 @@ export class Step2 extends PureComponent {
 		}));
 	};
 
-	handleSubmit = () => {
+	handleSubmit = async () => {
 		const payload = buildRegistrationPayload(this.state.formState);
 	
-		// console.log("REGISTRATION JSON:", payload);
-	
-		localStorage.setItem(
-			"registrationDraft_2",
-			JSON.stringify(payload, null, 2)
-		);
-	};
+		// localStorage.setItem(
+		// 	"registrationDraft_2",
+		// 	JSON.stringify(payload, null, 2)
+		// );
+		
+		await fetch("/api/register", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(payload),
+		})
+		.then((res) => res.json())
+		.then((data) => {
+			console.log("Registration response:", data);
+			if (!data.success) {
+				alert("Помилка реєстрації: " + data.message);
+			}
+		})
+		.catch((error) => {
+			console.error("Registration error:", error);
+			alert("Сталася помилка при реєстрації. Спробуйте ще раз.");
+		});
+  	};
 
 	handleLinkClick = (url) => {
 		window.open(url, '_blank');
@@ -102,7 +119,12 @@ export class Step2 extends PureComponent {
     	return (
       		<div>
         		<div className='header-grid'>
-          			<Header />
+          			<Header
+						onFBClick={this.props.onGoHome}
+						onHomeClick={this.props.onGoHome}
+						onLoginClick={this.props.onLoginClick}
+						onFindRoommateClick={this.props.onFindRoommate}
+					/>
         		</div>
         
 				<div style={{ padding: "40px 20px 40px 20px" }}>
@@ -402,7 +424,7 @@ export class Step2 extends PureComponent {
 											border: isHoveredMBTI ? "2px solid transparent" : "2px solid #F6DDD4",
 											borderRadius: "4px",
 										}}>
-										🔗 Тест MBTI
+										Тест MBTI
 									</button>
 								</div>
 							</div>
@@ -516,11 +538,11 @@ export class Step2 extends PureComponent {
 							<SubmitBtn
 								onClick={
 									() => {
-										this.handleSubmit();
+										// this.handleSubmit();
 										onNext();
 									}
 								}
-								// disabled={!isFormValid(formState)}
+								disabled={!isFormValid(formState)}
 								btntext="Далі >"
 							/>
 						</div>
@@ -537,3 +559,7 @@ const labelStyle = {
   fontFamily: "Seenonim",
   color: "#000",
 };
+
+
+
+

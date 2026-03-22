@@ -1,14 +1,14 @@
-import React, { PureComponent } from 'react';
-import { SmartSelect } from '../components/SmartSelect';
-import { SmartInput } from '../components/SmartInput';
-import { SmartBox } from '../components/SmartBox';
-import { SmartCreatable } from '../components/SmartCreatable';
-import { CityOptions } from '../components/CityOptions';
-import { Header } from '../components/Header';
-import SmartCalendar from '../components/SmartCalendar';
-import { PasswordInput } from '../components/PasswordInfo';
-import { PassConfirm } from '../components/PassConfirm';
-import { SubmitBtn } from '../components/SubmitBtn';
+﻿import React, { PureComponent } from 'react';
+import { SmartSelect } from '../components/SmartSelect.jsx';
+import { SmartInput } from '../components/SmartInput.jsx';
+import { SmartBox } from '../components/SmartBox.jsx';
+import { SmartCreatable } from '../components/SmartCreatable.jsx';
+import { CityOptions } from '../components/CityOptions.jsx';
+import { Header } from '../components/Header.jsx';
+import SmartCalendar from '../components/SmartCalendar.jsx';
+import { PasswordInput } from '../components/PasswordInfo.jsx';
+import { PassConfirm } from '../components/PassConfirm.jsx';
+import { SubmitBtn } from '../components/SubmitBtn.jsx';
 
 function buildRegistrationPayload(formState) {
 	const result = {};
@@ -39,16 +39,33 @@ export class Step1 extends PureComponent {
 		}));
 	};
 
-	handleSubmit = () => {
+	handleSubmit = async () => {
 		const payload = buildRegistrationPayload(this.state.formState);
 	
-		// console.log("REGISTRATION JSON:", payload);
-	
-		localStorage.setItem(
-			"registrationDraft_1",
-			JSON.stringify(payload, null, 2)
-		);
-	};
+		// localStorage.setItem(
+		// 	"registrationDraft_2",
+		// 	JSON.stringify(payload, null, 2)
+		// );
+		
+		await fetch("/api/register", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(payload),
+		})
+		.then((res) => res.json())
+		.then((data) => {
+			console.log("Registration response:", data);
+			if (!data.success) {
+				alert("Помилка реєстрації: " + data.message);
+			}
+		})
+		.catch((error) => {
+			console.error("Registration error:", error);
+			alert("Сталася помилка при реєстрації. Спробуйте ще раз.");
+		});
+  	};
 
   	render() {
 		const { formState } = this.state;
@@ -82,10 +99,13 @@ export class Step1 extends PureComponent {
 		}	
 
     	return (
-      		<div>
-        		<div className='header-grid'>
-          			<Header />
-        		</div>
+      		<div className="landing-page">
+        		<Header
+						onFBClick={this.props.onGoHome}
+						onHomeClick={this.props.onGoHome}
+						onLoginClick={this.props.onLoginClick}
+						onFindRoommateClick={this.props.onFindRoommate}
+				/>
         
 				<div style={{ padding: "40px 20px 40px 20px" }}>
        				{/* CARD */}
@@ -262,10 +282,10 @@ export class Step1 extends PureComponent {
 						>
 							<SubmitBtn
 								onClick={() => {
-									this.handleSubmit();
+									// this.handleSubmit();
 									onNext();
 								}}
-								// disabled={!isFormValid(formState)}
+								disabled={!isFormValid(formState)}
 								btntext="Далі >"
 							/>
 						</div>
@@ -282,3 +302,4 @@ const labelStyle = {
   fontFamily: "Seenonim",
   color: "#000",
 };
+
