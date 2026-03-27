@@ -1,8 +1,10 @@
 from user.models import UserHousing
 from user.serializers import UserHousingSerializer
-from .BaseView import BaseViewSet
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 
-class UserHousingViewSet(BaseViewSet):
+class UserHousingViewSet(viewsets.ModelViewSet):
+    # permission_classes = [IsAuthenticated]
     queryset = UserHousing.objects.all()
     serializer_class = UserHousingSerializer
